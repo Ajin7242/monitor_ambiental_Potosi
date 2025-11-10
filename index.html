@@ -4,137 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Monitor Ambiental Potosí</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="estilo.css" />
   <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #eaf4f4;
-      color: #333;
-      padding: 2rem;
-    }
-    h1 {
-      text-align: center;
-      color: #0077b6;
-      margin-bottom: 2rem;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      padding: 0 1rem;
-    }
-    .nodo {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      padding: 1.2rem;
-      transition: transform 0.2s ease;
-    }
-    .nodo:hover {
-      transform: scale(1.02);
-    }
-    .nodo h2 {
-      margin-bottom: 1rem;
-      color: #023e8a;
-    }
-    .label {
-      font-weight: bold;
-      font-size: 1rem;
-      margin-top: 0.5rem;
-      color: #555;
-    }
-    .value {
-      font-size: 1.5rem;
-      color: #0077b6;
-      margin-bottom: 0.5rem;
-    }
-    .activo {
-      color: green;
-      font-weight: bold;
-    }
-    .inactivo {
-      color: red;
-      font-weight: bold;
-    }
-  </style>
+  <script src="app.js" defer></script>
 </head>
 <body>
-  <h1>🌦️ Monitor Ambiental Potosí</h1>
-  <div class="grid" id="contenedor"></div>
 
-  <script>
-    const client = mqtt.connect("wss://broker.emqx.io:8084/mqtt");
-    const contenedor = document.getElementById("contenedor");
+  <!-- MENÚ DE INICIO -->
+  <div id="inicio" class="inicio">
+    <div class="encabezado">
+      <div class="lado">
+        <img src="img/logo_uatf.png" alt="Logo UATF" class="imagen-encabezado" />
+        <p class="texto-encabezado">Universidad Autónoma Tomás Frías</p>
+      </div>
+      <div class="lado">
+        <img src="img/logo_carrera.jpg" alt="Ingeniería Electrónica" class="imagen-encabezado" />
+        <p class="texto-encabezado">Ingeniería Electrónica</p>
+      </div>
+    </div>
 
-    const nodos = [
-      { id: 1, nombre: "Zona 1" },
-      { id: 2, nombre: "Zona 2" },
-      { id: 3, nombre: "Zona 3" },
-      { id: 4, nombre: "Zona 4" }
-    ];
+    <img src="img/logo_potosi.jpg" alt="Bienvenida" class="banner" />
+    <div class="mensaje">
+      <h2>Bienvenido al Monitor Ambiental de Potosí</h2>
+      <p>Consulta en tiempo real los datos de temperatura, humedad, calidad del aire y más.</p>
+      <button onclick="entrar()">Ingresar al Panel</button>
+    </div>
+  </div>
 
-    const variables = ["temperatura", "humedad", "aire", "lluvia", "estado"];
-    const labels = {
-      temperatura: "🌡️ Temperatura",
-      humedad: "💧 Humedad",
-      aire: "🌫️ Calidad del Aire (ppm)",
-      lluvia: "🌧️ Porcentaje de Lluvia",
-      estado: "📶 Estado"
-    };
+  <!-- PANEL DE MONITOREO -->
+  <div id="panel" style="display:none;">
+    <header class="panel-header">
+      <h1>🌦️ Monitor Ambiental Potosí</h1>
+      <div class="status-bar">
+        <div id="connStatus" class="conn disconnected">Desconectado</div>
+      </div>
+    </header>
 
-    // Crear estructura HTML para cada nodo
-    nodos.forEach(nodo => {
-      const nodoDiv = document.createElement("div");
-      nodoDiv.className = "nodo";
-      nodoDiv.innerHTML = `<h2>${nodo.nombre}</h2>`;
-      variables.forEach(v => {
-        const label = document.createElement("div");
-        label.className = "label";
-        label.textContent = labels[v];
-        const value = document.createElement("div");
-        value.className = "value";
-        value.id = `${v}${nodo.id}`;
-        value.textContent = "--";
-        nodoDiv.appendChild(label);
-        nodoDiv.appendChild(value);
-      });
-      contenedor.appendChild(nodoDiv);
-    });
+    <div class="grid" id="contenedor"></div>
+  </div>
 
-    // Suscribirse a todos los tópicos
-    client.on("connect", () => {
-      console.log("Conectado al broker MQTT");
-      nodos.forEach(nodo => {
-        variables.forEach(v => {
-          client.subscribe(`${v}${nodo.id}/uatf`);
-        });
-      });
-    });
-
-    // Actualizar valores al recibir mensajes
-    client.on("message", (topic, message) => {
-      const payload = message.toString().trim();
-      const match = topic.match(/(\w+)(\d)\/uatf/);
-      if (match) {
-        const variable = match[1];
-        const nodo = match[2];
-        const elemento = document.getElementById(`${variable}${nodo}`);
-        if (elemento) {
-          if (variable === "estado") {
-            elemento.textContent = payload === "1.00" ? "Activo" : "Inactivo";
-            elemento.className = payload === "1.00" ? "value activo" : "value inactivo";
-          } else if (variable === "temperatura") {
-            elemento.textContent = `${payload} °C`;
-          } else if (variable === "humedad") {
-            elemento.textContent = `${payload} %`;
-          } else if (variable === "aire") {
-            elemento.textContent = `${payload} ppm`;
-          } else if (variable === "lluvia") {
-            elemento.textContent = `${payload} %`;
-          }
-        }
-      }
-    });
-  </script>
 </body>
 </html>

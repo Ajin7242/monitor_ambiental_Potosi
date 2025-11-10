@@ -1,0 +1,178 @@
+:root{
+  --bg: #f4fbfb;
+  --card: #ffffff;
+  --primary: #0077b6;
+  --accent: #023e8a;
+  --muted: #6b7280;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --glass: rgba(255,255,255,0.6);
+  --radius: 12px;
+  --shadow: 0 8px 24px rgba(2,6,23,0.08);
+  --transition: 200ms ease;
+  --max-width: 1200px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body {
+  font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, var(--bg), #eaf4f4 60%);
+  color: #0f172a;
+  padding: 2rem;
+  margin: 0;
+  display:flex;
+  justify-content:center;
+}
+
+#panel, .inicio{
+  width:100%;
+  max-width:var(--max-width);
+  margin:0 auto;
+}
+
+/* Header */
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:1rem;
+  padding:0 1rem 1rem;
+  flex-wrap:wrap;
+}
+.panel-header h1{
+  margin:0;
+  color:var(--accent);
+  font-weight:700;
+  letter-spacing:0.2px;
+}
+
+/* status */
+.status-bar{display:flex;align-items:center;gap:.75rem}
+.conn{
+  padding:.35rem .65rem;
+  border-radius:999px;
+  font-size:.9rem;
+  color:white;
+  font-weight:600;
+  box-shadow:var(--shadow);
+}
+.conn.disconnected{background:#9ca3af}
+.conn.connecting{background:#f59e0b}
+.conn.connected{background:var(--primary)}
+
+/* grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.25rem;
+  padding: 0 1rem 2rem;
+}
+
+/* card */
+.nodo {
+  background: linear-gradient(180deg, var(--card), var(--glass));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  transition: transform var(--transition), box-shadow var(--transition);
+  border: 1px solid rgba(3,7,18,0.04);
+}
+.nodo:hover { transform: translateY(-6px); box-shadow: 0 14px 40px rgba(2,6,23,0.12); }
+.nodo h2 { margin:0 0 .8rem 0; color:var(--accent); font-size:1.05rem; }
+
+/* row for each metric */
+.metric {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:.75rem;
+  padding:.45rem 0;
+  border-top:1px dashed rgba(2,6,23,0.04);
+}
+.metric:first-of-type{border-top:0;padding-top:0}
+
+.meta {
+  display:flex;
+  flex-direction:column;
+}
+.label {
+  font-weight:600;
+  font-size:.95rem;
+  color:var(--muted);
+}
+.value {
+  font-size:1.1rem;
+  color:var(--primary);
+  font-weight:700;
+  transition:color var(--transition), transform var(--transition);
+}
+.value.change {
+  transform: translateY(-3px);
+}
+
+/* small timestamp */
+.updated {
+  font-size: .72rem;
+  color: #9aa4b2;
+  margin-top: 0.18rem;
+}
+
+/* status badges */
+.badge {
+  display:inline-flex;
+  align-items:center;
+  gap:.5rem;
+  font-weight:700;
+  border-radius:999px;
+  padding:.28rem .6rem;
+  font-size:.85rem;
+}
+.dot {
+  width:10px;height:10px;border-radius:50%;
+  box-shadow:0 0 0 4px rgba(0,0,0,0.02) inset;
+}
+.activo .dot{background:var(--success)}
+.inactivo .dot{background:var(--danger)}
+.activo{color:var(--success)}
+.inactivo{color:var(--danger)}
+
+/* INICIO */
+.inicio {
+  text-align: center;
+  padding: 2rem;
+  background:transparent;
+}
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+.lado { text-align:center; flex:1 1 45% }
+.imagen-encabezado { max-width:120px; height:auto; margin-bottom:.4rem; border-radius:8px }
+.texto-encabezado { font-size: .95rem; color:var(--accent); font-weight:700 }
+.banner { width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:1rem; box-shadow:var(--shadow) }
+.mensaje h2{ color:var(--accent); margin-bottom:.5rem }
+.mensaje p{ font-size:1.02rem; color:var(--muted); margin-bottom:1rem }
+
+button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color var(--transition), transform var(--transition);
+}
+button:hover{ background-color: #005f8e; transform: translateY(-2px) }
+
+/* responsive tweaks */
+@media (max-width:520px){
+  .encabezado{gap:.5rem}
+  .panel-header{padding:0 0 1rem}
+  .label{font-size:.9rem}
+}
